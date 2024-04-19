@@ -1,5 +1,7 @@
 from flask import Flask
+from model.config import flask_default
 from flask import render_template
+from view.momgodb_do import mongo_view
 
 # 实例化一个Flask类的对象
 app = Flask(__name__)
