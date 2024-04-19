@@ -1,5 +1,5 @@
 from flask import Flask,request,render_template,flash
-from model.config import flask_default
+from models.config import flask_default
 from view.momgodb_do import mongo_view
 
 # 实例化一个Flask类的对象
