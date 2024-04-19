@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>某某大学线上面试现场</title>
+<style>
+    body {
+        margin: 0;
+        padding: 0;
+        font-family: Arial, sans-serif;
+        background-color: #f7f7f7;
+    }
+    .container {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        align-items: flex-start;
+        height: calc(100vh - 80px); /* 减去横幅的高度 */
+        padding: 20px;
+    }
+    .left-box {
+        width: 50%;
+        height: 100%;
+        background-color: #ffffff;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        border-radius: 10px;
+    }
+    .right-bottom-box {
+        width: 30%;
+        height: 30%;
+        position: absolute;
+        bottom: 0;
+        right: 0;
+        background-color: #ffffff;
+        overflow: hidden;
+        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        border-radius: 10px;
+    }
+    .banner {
+        width: calc(100% - 40px); /* 减去横幅的左右 padding */
+        background-color: #333;
+        color: #fff;
+        text-align: center;
+        padding: 20px;
+        position: fixed;
+        top: 0;
+        left: 0;
+        z-index: 999;
+        border-bottom-left-radius: 10px;
+        border-bottom-right-radius: 10px;
+    }
+    .warning {
+        position: absolute;
+        top: 60px;
+        right: 20px;
+        background-color: #ff4d4d;
+        color: #fff;
+        padding: 5px 10px;
+        border-radius: 5px;
+        display: none;
+        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    }
+    .site-banner {
+        background-color: #007bff;
+        color: #fff;
+        text-align: center;
+        padding: 10px 0;
+        margin-top: 20px;
+        border-radius: 10px;
+        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    }
+    #video {
+        width: 100%;
+        border-radius: 10px;
+        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    }
+    #chat {
+        width: 100%;
+        height: 100%;
+        border: none;
+        resize: none;
+        border-radius: 10px;
+        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        padding: 10px;
+    }
+</style>
+</head>
+<body>
+    <div class="banner">
+        <h1>某某大学线上面试现场</h1>
+        <span id="countdown">倒计时: 30:00</span>
+    </div>
+    <div class="container">
+        <div class="left-box">
+            <video id="video" autoplay></video>
+        </div>
+        <div class="right-bottom-box">
+            <textarea id="chat" placeholder="与GPT进行对话..."></textarea>
+        </div>
+    </div>
+    <div class="warning" id="warning">离开摄像头</div>
+    <div class="site-banner">欢迎参加某某大学线上面试现场</div>
+<script>
+    // 设置倒计时
+    let countdown = 30 * 60; // 设置倒计时时间，单位：秒
+    let countdownElement = document.getElementById('countdown');
+    setInterval(() => {
+        let minutes = Math.floor(countdown / 60);
+        let seconds = countdown % 60;
+        countdownElement.innerText = '倒计时: ' + formatTime(minutes) + ':' + formatTime(seconds);
+        countdown--;
+
+        // 提示框：倒计时剩余5分钟
+        if (countdown === 5 * 60) {
+            alert('还剩5分钟，是否要加时？');
+        }
+
+        // 提示框：倒计时剩余29分钟
+        if (countdown === 29 * 60) {
+            alert('你已经进入面试现场，请开始你的自述！');
+        }
+
+        if (countdown <= 0) {
+            // 倒计时结束后显示警告
+            document.getElementById('warning').style.display = 'block';
+        }
+    }, 1000);
+
+    // 格式化时间
+    function formatTime(time) {
+        return time < 10 ? '0' + time : time;
+    }
+
+    // 调用摄像头
+    navigator.mediaDevices.getUserMedia({ video: true })
+        .then(function(stream) {
+            let video = document.getElementById('video');
+            video.srcObject = stream;
+            video.play();
+        })
+        .catch(function(err) {
+            console.log("An error occurred: " + err);
+        });
+
+    // 与GPT进行对话
+    const chatTextarea = document.getElementById('chat');
+    chatTextarea.addEventListener('input', function() {
+        // 当输入框内容发生变化时触发
+        let inputText = this.value.trim(); // 获取输入框文本，去除首尾空格
+        if (inputText !== '') {
+            // 向GPT发送请求并获取响应
+            fetchGPTResponse(inputText)
+                .then(response => {
+                    // 将GPT的响应添加到输入框下方
+                    this.value += '\nGPT: ' + response;
+                    // 重置输入框高度
+                    this.style.height = 'auto';
+                    this.style.height = this.scrollHeight + 'px';
+                })
+                .catch(error => console.error(error));
+        }
+    });
+
+    // 发送请求给GPT并获取响应
+    function fetchGPTResponse(inputText) {
+        // 这里可以替换为你的GPT接口地址
+        const apiUrl = 'your-gpt-api-url';
+        return fetch(apiUrl, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ input: inputText })
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(data => data.output)
+        .catch(error => console.error('Error:', error));
+    }
+</script>
+</body>
+</html>
