@@ -9,7 +9,7 @@ class Config:
 
 # the config for development
 class DevelopmentConfig(Config):
-    SQLALCHEMY_DATABASE_URI = 'mysql+pymysql://root:root@127.0.0.1:3306/xaingmu'
+    SQLALCHEMY_DATABASE_URI = 'mongodb://root:root@127.0.0.1:27017/test'
     DEBUG = True
 
 # define the config
