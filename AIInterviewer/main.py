@@ -13,8 +13,6 @@ def web1():
 def web2():
     return render_template("echarts6.html")
 
-
-
 #run
 if __name__ == '__main__':
     app.run(debug=True)
