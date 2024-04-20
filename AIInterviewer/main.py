@@ -4,6 +4,7 @@ from view.momgodb_do import mongo_view
 
 # 实例化一个Flask类的对象
 app = Flask(__name__)
+
 # 设置路由和函数对应关系
 @app.route('/')
 def web1():
