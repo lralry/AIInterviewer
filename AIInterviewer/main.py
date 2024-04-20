@@ -1,6 +1,12 @@
-from flask import Flask,request,render_template,flash
-from models.config import flask_default
-from view.momgodb_do import mongo_view
+from flask import Flask, render_template, request, redirect, url_for,flask
+#from models.config import flask_default
+#from view.momgodb_do import mongo_view
+from pymongo import MongoClient
+
+client = MongoClient('localhost', 27017)  # 地址与接口
+database = client.get_database('test')  # 数据库名
+collection = database.get_collection('test_q')  # 表名
+
 
 # 实例化一个Flask类的对象
 app = Flask(__name__)
