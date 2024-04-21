@@ -18,7 +18,7 @@ def web1():
 
 @app.route('/result',methods = ['POST', 'GET'])
 def web2():
-    return render_template("echarts6.html")
+    return render_template("echarts.html")
 
 
 @app.route('/inser_test')
