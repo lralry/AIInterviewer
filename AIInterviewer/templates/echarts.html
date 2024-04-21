@@ -3,14 +3,80 @@
 <head>
     <meta charset="UTF-8">
     <title>某某大学线上面试结果</title>
+    <style>
+body {
+   height: 100%; /* 确保 body 和 html 的高度为视口高度 */
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+    background-color: #f7f7f7;
+}
+
+.banner {
+    width: 100%;
+    background-color: rgba(51, 51, 51, 0.5);
+    color: #fff;
+    text-align: center;
+    padding: 20px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 999;
+    box-sizing: border-box; /* 确保padding不会影响宽度 */
+}
+
+.container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    align-items: flex-start; /* 初始对齐方式，稍后会通过 padding-top 调整 */
+    height: 100%; /* 容器高度为视口高度 */
+    padding-top: 25vh; /* 距离顶部 25% */
+    padding-left: 20px;
+    padding-right: 20px;
+    box-sizing: border-box; /* 确保 padding 不会影响宽度 */
+}
+
+.left-box, .center_box, .right-bottom-box {
+    width: calc(33.33% - 20px); /* 减去左右两边的 margin */
+    height: 70vh; /* 高度为视口高度的 15% */
+    background-color: #ffffff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    margin: 0 10px 20px; /* 上下左右间距 */
+    box-sizing: border-box; /* 确保 padding 和 border 不会影响宽度 */
+}
+
+/* 移除最后一个盒子的右边距 */
+.container > *:last-child {
+    margin-right: 0;
+}
+
+/* 移除第一行盒子的下边距 */
+.container > *:nth-child(-n+3) {
+    margin-bottom: 0;
+}
+</style>
     <script src="./static/js/jquery-1.11.1.main.js"></script>
 
 </head>
 <body  style="background-image:url('../static/img/bg.png'); background-repeat: no-repeat; background-size: cover;">
+
     <form action = "http://localhost:5000/result" method = "POST">
- <h1>面试(ajax)json</h1>
- <h2>111</h2>
+   <div class="banner">
+        <h1>AIInterviewer Result</h1>
+  </div>
+
+   <div class="container">
+        <div class="left-box">
+            <video id="video" autoplay></video>
+        </div>
+       <div class="center_box">ai</div>
+        <div class="right-bottom-box">雷达图信息将显示在这..</div>
+    </div>
     </form>
-<div>雷达图信息将显示在这...</div>
 </body>
 </html>
