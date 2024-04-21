@@ -59,24 +59,38 @@ body {
 .container > *:nth-child(-n+3) {
     margin-bottom: 0;
 }
+#center_ai{
+    background-image: url('../static/img/ai.jpg');
+    background-size: cover;
+    height: 429px;
+    opacity: 0.9;
+}
+#bg{
+    background-image:url('../static/img/bg.png');
+    background-repeat: no-repeat;
+     background-size: cover;
+}
 </style>
     <script src="./static/js/jquery-1.11.1.main.js"></script>
 
 </head>
-<body  style="background-image:url('../static/img/bg.png'); background-repeat: no-repeat; background-size: cover;">
-
-    <form action = "http://localhost:5000/result" method = "POST">
-   <div class="banner">
+<body id="bg">
+<form action = "http://localhost:5000/result" method = "POST">
+    <div class="banner">
         <h1>AIInterviewer Result</h1>
-  </div>
+    </div>
 
    <div class="container">
+
         <div class="left-box">
             <video id="video" autoplay></video>
         </div>
-       <div class="center_box">ai</div>
+
+       <div class="center_box" id="center_ai" ></div>
+
         <div class="right-bottom-box">雷达图信息将显示在这..</div>
     </div>
-    </form>
+
+</form>
 </body>
 </html>
