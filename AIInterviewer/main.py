@@ -39,4 +39,4 @@ def query_data():
 
 #run
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(host = 0.0.0.0)
