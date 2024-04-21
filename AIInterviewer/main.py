@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for,flask
+from flask import Flask, render_template, request, redirect, url_for
 #from models.config import flask_default
 #from view.momgodb_do import mongo_view
 from pymongo import MongoClient
@@ -39,4 +39,4 @@ def query_data():
 
 #run
 if __name__ == '__main__':
-    app.run(host = 0.0.0.0)
+    app.run(debug=False)
