@@ -12,44 +12,6 @@ import datetime
 
 # class
 class face_emotion():
-    class ImageStorage:
-        def __init__(self, mongo_uri, database_name, collection_name):
-            # 连接到 MongoDB
-            self.client = pymongo.MongoClient(mongo_uri)
-            self.db = self.client[database_name]
-            self.collection = self.db[collection_name]
-            self.fs = gridfs.GridFS(self.db)
-
-        def save_screenshot(self, image):
-            # 将图像转换为二进制数据
-            _, buffer = cv2.imencode('.jpg', image)
-            image_data = buffer.tobytes()
-
-            # 生成时间戳用于文件名
-            timestamp = datetime.datetime.now().strftime("%Y%m%d%H%M%S")
-            filename = f"screenshot_{timestamp}.jpg"
-
-            # 将二进制数据保存到 GridFS 中
-            file_id = self.fs.upload_from_stream_with_filename(filename, BytesIO(image_data))
-
-            # 将文件 ID 和文件名保存到集合中
-            document = {
-                'filename': filename,
-                'file_id': file_id,
-                'timestamp': timestamp
-            }
-            self.collection.insert_one(document)
-
-            print(f"Screenshot saved with ID {file_id} and filename {filename}")
-
-            # 使用示例
-
-    image_storage = ImageStorage('mongodb://localhost:27017/', 'mydatabase', 'images')
-
-    # 假设你已经有了一个 OpenCV 图像对象 'image'
-    # image = cv2.imread('path_to_image.jpg')
-    # image_storage.save_screenshot(image)
-
     def __init__(self):
         # 使用特征提取器 get_frontal_face_detector
         self.detector = dlib.get_frontal_face_detector()
