@@ -87,6 +87,8 @@
         box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
         padding: 10px;
     }
+    #result_A{
+    }
 
 </style>
 </head>
@@ -95,6 +97,7 @@
     <div class="banner">
         <h1>某某大学线上面试现场</h1>
         <span id="countdown">倒计时: 30:00</span>
+    <span><button id="resultButton" style="display: none;">查看结果</button></span>
     </div>
     <div class="container">
         <div class="left-box">
@@ -106,9 +109,10 @@
     </div>
     <div class="warning" id="warning">离开摄像头</div>
     <div class="site-banner">欢迎参加某某大学线上面试现场</div>
+
 <script>
     // 设置倒计时
-    let countdown = 30 * 60; // 设置倒计时时间，单位：秒
+    let countdown = 1 * 60; // 设置倒计时时间，单位：秒
     let countdownElement = document.getElementById('countdown');
     setInterval(() => {
         let minutes = Math.floor(countdown / 60);
@@ -129,8 +133,11 @@
         if (countdown <= 0) {
             // 倒计时结束后显示警告
             document.getElementById('warning').style.display = 'block';
+                 // 显示按钮并跳转到另一个页面
+            document.getElementById('resultButton').style.display = 'block';
         }
     }, 1000);
+
 
     // 格式化时间
     function formatTime(time) {
@@ -185,7 +192,13 @@
         })
         .then(data => data.output)
         .catch(error => console.error('Error:', error));
-    }
+    };
+     // 添加按钮点击事件，实现跳转
+        document.getElementById('resultButton').addEventListener('click', function() {
+            // 点击按钮时跳转到另一个 HTML 页面
+            window.location.href = 'echarts.html';
+        });
+
 </script>
 </body>
 </html>

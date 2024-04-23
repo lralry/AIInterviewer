@@ -3,7 +3,6 @@
 import cv2  # 图像处理的库 OpenCv
 import dlib  # 人脸识别的库 dlib
 import numpy as np  # 数据处理的库 numpy
-import pymongo
 import gridfs
 from io import BytesIO
 import cv2
