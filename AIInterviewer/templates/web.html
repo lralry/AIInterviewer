@@ -96,8 +96,9 @@
         <span id="countdown">倒计时: 30:00</span>
     </div>
     <div class="container">
-        <div class="left-box">
-            <video id="video" autoplay></video>
+        <div class="left-box" >
+
+            <video id="en" autoplay></video>
         </div>
         <div class="right-bottom-box">
             <textarea id="chat" placeholder="与GPT进行对话..."></textarea>
@@ -106,6 +107,9 @@
     <div class="warning" id="warning">离开摄像头</div>
     <div class="site-banner">欢迎参加某某大学线上面试现场</div>
 <script>
+
+
+
     // 设置倒计时
     let countdown = 30 * 60; // 设置倒计时时间，单位：秒
     let countdownElement = document.getElementById('countdown');
@@ -137,6 +141,7 @@
     }
 
     // 调用摄像头
+    const video = document.getElementById('video');
     navigator.mediaDevices.getUserMedia({ video: true })
         .then(function(stream) {
             let video = document.getElementById('video');
@@ -146,6 +151,44 @@
         .catch(function(err) {
             console.log("An error occurred: " + err);
         });
+// 获取视频流和音频流
+navigator.mediaDevices.getUserMedia({ video: true, audio: true })
+  .then(function(stream) {
+    const video = document.getElementById('video');
+    video.srcObject = stream;
+    video.play();
+  })
+  .catch(function(err) {
+    console.log("An error occurred: " + err);
+  });
+
+// 发送数据到服务器并显示结果
+document.getElementById('captureButton').addEventListener('click', function() {
+    const video = document.getElementById('video');
+    const canvas = document.createElement('canvas');
+    const ctx = canvas.getContext('2d');
+    canvas.width = video.videoWidth;
+    canvas.height = video.videoHeight;
+    ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+    const imageData = canvas.toDataURL('image/jpeg');
+
+    // 使用 Fetch API 发送数据到服务器
+    fetch('/process_data', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ image_data: imageData })
+    })
+    .then(response => response.json())
+    .then(data => {
+        // 处理服务器返回的结果并显示在指定位置
+        const resultDiv = document.getElementById('result');
+        resultDiv.innerHTML = '<p>Result: ' + data.result + '</p>';
+    })
+    .catch(error => console.error('Error:', error));
+});
+
 
     // 与GPT进行对话
     const chatTextarea = document.getElementById('chat');
