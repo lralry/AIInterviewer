@@ -10,7 +10,7 @@ import datetime
 
 
 # class
-class face_emotion():
+class FaceEmotion:
     def __init__(self):
         # 使用特征提取器 get_frontal_face_detector
         self.detector = dlib.get_frontal_face_detector()
@@ -162,5 +162,5 @@ class face_emotion():
 
 # main
 if __name__ == "__main__":
-    my_face = face_emotion()
+    my_face = FaceEmotion()
     my_face.learning_face()
