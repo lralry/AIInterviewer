@@ -2,6 +2,7 @@ from flask import Flask, render_template, request, redirect, url_for
 #from models.config import flask_default
 #from view.momgodb_do import mongo_view
 from pymongo import MongoClient
+from face import face_emotion
 
 client = MongoClient('mongodb://localhost:27017')  # 地址与接口
 database = client.get_database('test')  # 数据库名
