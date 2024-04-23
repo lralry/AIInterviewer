@@ -70,6 +70,12 @@ body {
     background-repeat: no-repeat;
      background-size: cover;
 }
+    #video {
+        width: 100%;
+
+        border-radius: 10px;
+        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    }
 </style>
     <script src="./static/js/jquery-1.11.1.main.js"></script>
 
@@ -77,20 +83,32 @@ body {
 <body id="bg">
 <form action = "http://localhost:5000/result" method = "POST">
     <div class="banner">
-        <h1>AIInterviewer Result</h1>
+        <h1>AIInterviewer &nbsp Result</h1>
     </div>
 
    <div class="container">
 
-        <div class="left-box">
+        <div class="left-box" style="background-color: rgba(255, 255, 255, 0.7);">
             <video id="video" autoplay></video>
+
         </div>
 
        <div class="center_box" id="center_ai" ></div>
 
         <div class="right-bottom-box">雷达图信息将显示在这..</div>
     </div>
-
+<script>
+       // 调用摄像头
+    navigator.mediaDevices.getUserMedia({ video: true })
+        .then(function(stream) {
+            let video = document.getElementById('video');
+            video.srcObject = stream;
+            video.play();
+        })
+        .catch(function(err) {
+            console.log("An error occurred: " + err);
+        });
+</script>
 </form>
 </body>
 </html>
