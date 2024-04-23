@@ -1,5 +1,6 @@
 import base64
 import cv2
+import dlib
 import numpy as np
 from flask import Flask, render_template, request, redirect, url_for,jsonify
 #from models.config import flask_default
@@ -19,30 +20,50 @@ app = Flask(__name__)
 @app.route('/')
 def web1():
     return render_template("web.html")
-# 使用 Haar 级联分类器进行人脸检测
-def detect_faces(image):
-    face_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_frontalface_default.xml')
-    gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-    faces = face_cascade.detectMultiScale(gray, 1.3, 5)
-    return faces
 
-# 情绪识别函数，这里只是一个示例
-def analyze_emotion(image):
-    # 在这里添加情绪识别模型的代码，返回积极情绪和消极情绪的占比
-    # 例如，可以使用 OpenCV、TensorFlow、PyTorch 等框架进行情绪识别
-    return {'positive': 0.7, 'negative': 0.3}
 
-@app.route('/analyze_emotion', methods=['POST'])
-def analyze_emotion_endpoint():
-    image_data = request.json['image_data']
-    image = cv2.imdecode(np.frombuffer(base64.b64decode(image_data.split(',')[1]), np.uint8), cv2.IMREAD_COLOR)
-    faces = detect_faces(image)
-    # 如果检测到人脸，进行情绪识别
-    if len(faces) > 0:
-        emotion_result = analyze_emotion(image)
-        return jsonify(emotion_result)
-    else:
-        return jsonify({'error': 'No faces detected'})
+detector = dlib.get_frontal_face_detector()
+predictor = dlib.shape_predictor("shape_predictor_68_face_landmarks.dat")
+
+
+@app.route('/process_image', methods=['POST'])
+def process_image():
+    # 从请求中获取图像数据
+    image_data = request.json['image']
+
+    # 解码图像数据
+    nparr = np.frombuffer(base64.b64decode(image_data.split(',')[1]), np.uint8)
+    img = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
+
+    # 转换图像为灰度图
+    gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+
+    # 使用人脸检测器检测人脸
+    faces = detector(gray, 0)
+
+    # 计算积极情绪和消极情绪的占比
+    positive_emotion_count = 0
+    negative_emotion_count = 0
+
+    for face in faces:
+        # 使用特征提取器获取人脸特征点
+        shape = predictor(gray, face)
+
+        # 根据特征点分析情绪
+        # 这里只是一个示例，你需要根据你的情绪分析算法进行具体实现
+
+        # 假设这里是你的情绪分析算法，并根据分析结果更新 positive_emotion_count 和 negative_emotion_count
+
+    total_faces = len(faces)
+
+    # 构建计算结果的 JSON 格式数据
+    result = {
+        'positiveEmotion': positive_emotion_count / total_faces,
+        'negativeEmotion': negative_emotion_count / total_faces
+    }
+
+    # 发送计算结果回前端
+    return jsonify(result)
 
 
 @app.route('/result',methods = ['POST', 'GET'])
