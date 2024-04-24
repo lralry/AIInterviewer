@@ -40,7 +40,7 @@ body {
 .left-box, .center_box, .right-bottom-box {
     width: calc(33.33% - 20px); /* 减去左右两边的 margin */
     height: 70vh; /* 高度为视口高度的 15% */
-    background-color: #ffffff;
+    background-color:rgba(0, 0, 0, 0.1) ;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -76,12 +76,16 @@ body {
         border-radius: 10px;
         box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
     }
+
+    canvas {
+    border: 0px solid #000;
+  }
 </style>
     <script src="./static/js/jquery-1.11.1.main.js"></script>
 
 </head>
 <body id="bg">
-<form action = "http://localhost:5000/result" method = "POST">
+<form action = "http://localhost:5001/result" method = "POST">
     <div class="banner">
         <h1>AIInterviewer &nbsp Result</h1>
     </div>
@@ -90,12 +94,13 @@ body {
 
         <div class="left-box" style="background-color: rgba(255, 255, 255, 0.7);">
             <video id="video" autoplay></video>
-
         </div>
 
        <div class="center_box" id="center_ai" ></div>
 
-        <div class="right-bottom-box">雷达图信息将显示在这..</div>
+        <div class="right-bottom-box">
+<canvas id="radarChart" width="400" height="400"></canvas></div>
+
     </div>
 <script>
        // 调用摄像头
@@ -108,6 +113,74 @@ body {
         .catch(function(err) {
             console.log("An error occurred: " + err);
         });
+
+        var canvas = document.getElementById('radarChart');
+    var ctx = canvas.getContext('2d');
+
+
+
+    // ----------------------------------------------------------绘制雷达图
+    var canvas = document.getElementById('radarChart');
+    var ctx = canvas.getContext('2d');
+
+    // 数据
+    var data = [0.8, 0.6, 0.9, 0.7, 0.5];
+    // 参数
+    var labels = {{ topic | tojson }};
+<!--    var labels = ['label1','label2','label3','label4','label5'];-->
+
+    var maxValue = 1; // 最大值
+    var numSides = 5; // 边数
+    var radius = Math.min(canvas.width, canvas.height) / 3; // 半径
+
+    // 绘制雷达图
+    function drawRadarChart() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      // 绘制外层边框
+      ctx.beginPath();
+      for (var i = 0; i < numSides; i++) {
+        var angle = (Math.PI * 2 / numSides) * i;
+        var x = canvas.width / 2 + Math.cos(angle) * radius;
+        var y = canvas.height / 2 + Math.sin(angle) * radius;
+        ctx.lineTo(x, y);
+      }
+      ctx.closePath();
+      ctx.strokeStyle = 'white'; // 设置外层边框颜色为白色
+      ctx.stroke();
+
+      // 绘制多边形
+      ctx.beginPath();
+      for (var i = 0; i < numSides; i++) {
+        var angle = (Math.PI * 2 / numSides) * i;
+        var value = data[i] * radius;
+        var x = canvas.width / 2 + Math.cos(angle) * value;
+        var y = canvas.height / 2 + Math.sin(angle) * value;
+        if (i === 0) {
+          ctx.moveTo(x, y);
+        } else {
+          ctx.lineTo(x, y);
+        }
+      }
+      ctx.closePath();
+      ctx.fillStyle = 'rgba(0, 255, 0, 0.5)'; // 设置多边形填充颜色为绿色
+      ctx.fill();
+
+      // 绘制标签
+      ctx.font = '16px Arial';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillStyle = 'white'; // 设置字体颜色为白色
+      for (var i = 0; i < numSides; i++) {
+        var angle = (Math.PI * 2 / numSides) * i;
+        var x = canvas.width / 2 + Math.cos(angle) * radius * 1.2;
+        var y = canvas.height / 2 + Math.sin(angle) * radius * 1.2;
+        ctx.fillText(labels[i], x, y);
+      }
+    }
+
+    drawRadarChart();
+    // ----------------------------------------------------------绘制雷达图
 </script>
 </form>
 </body>
